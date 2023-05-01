@@ -110,9 +110,9 @@ descriptive_message_temp ="""
 
 #loading save model
 
-diabetes_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/diabeties_model.sav','rb'))
-heart_disease_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/heart_disease_model.sav','rb'))
-perkinsons_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/perkinsons_model.sav','rb'))
+diabetes_model=pickle.load(open('diabeties_model.sav','rb'))
+heart_disease_model=pickle.load(open('heart_disease_model.sav','rb'))
+perkinsons_model=pickle.load(open('perkinsons_model.sav','rb'))
 
 
 
