@@ -1,7 +1,10 @@
 import pickle
 import streamlit as st 
 from streamlit_option_menu import option_menu 
-
+import json
+from streamlit_lottie import st_lottie
+import requests
+from streamlit.components.v1 import iframe
 
 import pandas as pd
 import numpy as np
@@ -11,6 +14,16 @@ import os
 import joblib
 
 #data viz pkgs
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+def load_lottiefile(filepath : str):
+    with open(filepath,'r') as f:
+        return json.load(f)
+
 
 
 
@@ -97,13 +110,11 @@ descriptive_message_temp ="""
 
 #loading save model
 
+diabetes_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/diabeties_model.sav','rb'))
+heart_disease_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/heart_disease_model.sav','rb'))
+perkinsons_model=pickle.load(open('C:/Users/SHUBHAM MURTADAK/OneDrive/Desktop/deployment models/perkinsons_model.sav','rb'))
 
-diabetes_model=pickle.load(open('diabeties_model.sav','rb'))
-heart_disease_model=pickle.load(open('heart_disease_model.sav','rb'))
-perkinsons_model=pickle.load(open('perkinsons_model.sav','rb'))
 
-user_name_1=''
-user_pass_1=''
 
 def create_usertable():
     c.execute('CREATE TABLE IF NOT EXISTS usertable(username TEXT,password TEXT)')
@@ -116,8 +127,6 @@ def login_user(username,password):
     data=c.fetchall()
     return data
 def main():
-    user_name_1=''
-    user_pass_1=''
     """Multiple Diesease Prediction APP """
     #st.title("Multiple Diesease Predictor")
     #st.markdown(heading_html.format('royalblue'),unsafe_allow_html=True)
@@ -127,11 +136,145 @@ def main():
     
     
     if selected=='Home':
+        title, title_ani = st.columns([3,1])
+
+        with title:
+            st.title("Welcome To :blue[D'Predicto] ")
+            st.text("")
+            st.text("")
+            st.markdown("*Empowering early disease detection and personalized prevention with our advanced Disease Prediction System*")
+
+
+        wel_lottie = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_zpjfsp1e.json")
+        #wel_lottie = load_lottiefile(r'C:\Users\DELL\Downloads\Generic.json')
+        with title_ani :
+            st_lottie(
+                wel_lottie,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium",
+                height = None,
+                width = None,
+                key = None,
+            )
+
+        st.text("")
+        st.text("")
+        st.subheader("Our Offerings")
+
+        st.text("")
+        st.text("")
+
+        prediction, AptBk, Assis = st.columns(3)
+
+        pred = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_gkgqj2yq.json")
+        apt = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_hYRKYxxvdX.json")
+        bot = load_lottieurl("https://assets6.lottiefiles.com/packages/lf20_g7zx4ni5.json")
+
+        with prediction:
+            st_lottie(
+                pred,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium",
+                height = 220
+                )
+        prediction.markdown('<h4 style = "text-align: center">Prediction System ', unsafe_allow_html = True)
+
+        with AptBk:
+            st_lottie(
+                apt,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium"
+                )
+        AptBk.markdown('<h4 style = "text-align: center">Appointment Booking ', unsafe_allow_html = True)
+
+        with Assis:
+            st_lottie(
+                bot,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium"
+                )
+        Assis.markdown('<h4 style = "text-align: center">Assistance', unsafe_allow_html = True)
+
+
+
+        st.text('')
+        st.text("")
+        st.text("")
+
+        st.subheader("Disease :red[Predicion]")
+        st.text("")
+
+        diab, heart, park = st.columns(3)
+
+        dimg = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_tbjuenb2.json")
+        with diab:
+            st.text("")
+            st.text("")
+            st.text("")
+            st_lottie(
+                dimg,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium"
+                )
+            st.text("")
+            st.text("")
+            st.text("")
+
+
+        diab.markdown('<h4 style = "text-align: center">Diabetes', unsafe_allow_html = True)
+
+
+        himg = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_a3ntzciy.json")
+        with heart:
+            st_lottie(
+                himg,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium"
+                )
+        heart.markdown('<h4 style = "text-align: center">Heart Disease', unsafe_allow_html = True)
+
+        pimg = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_9NxFrGo71i.json")
+        with park:
+            st_lottie(
+                pimg,
+                speed = 1,
+                reverse = False,
+                loop = True,
+                quality = "medium"
+                )
+
+        park.markdown('<h4 style = "text-align: center">Parkinson Disease', unsafe_allow_html = True)
+
+
+       
         
-        st.markdown(image_html, unsafe_allow_html=True)
+        #st.markdown(image_html, unsafe_allow_html=True)
         st.markdown(what_to_do_temp, unsafe_allow_html=True)
         st.markdown(features_html, unsafe_allow_html=True)
-      
+        chatbot_url = 'http://127.0.0.1:5000/'
+
+        chatbot_visible = False
+
+        if st.button('Chat with our assistant '):
+        # Toggle the chatbot visibility when the button is clicked
+            chatbot_visible = not chatbot_visible
+
+# Show the chatbot iframe if chatbot_visible is True
+        if chatbot_visible:
+            st.write('## Chatbot')
+            iframe(chatbot_url, width=500, height=600)
         
     elif selected=='Login/Signup':
          st.subheader('Login /Signup')
@@ -142,9 +285,9 @@ def main():
               username=st.text_input('User Name')
               password=st.text_input("Password",type='password')
               if st.checkbox('Login'):
-                  #create_usertable()
-                  #result=login_user(username, password)
-                  if username!='' and password !='':
+                  create_usertable()
+                  result=login_user(username, password)
+                  if result:
                       st.success("Welcome {}".format(username))
          elif choice=='Signup':
              st.subheader('Create New Account')
@@ -159,10 +302,8 @@ def main():
                  st.warning('Password Not Match !')
                  
              if st.button('Submit'):
-                 #create_usertable()
-                 #add_userdata(new_user, new_password)
-                 user_name_1=new_user
-                 user_pass_1=new_password
+                 create_usertable()
+                 add_userdata(new_user, new_password)
                  st.success('You have successfully created a new Account')
                  st.info('Login to Get Started')
                  
